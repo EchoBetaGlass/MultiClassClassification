@@ -15,20 +15,23 @@ inputs = np.random.random((num_samples, num_variables))
 sums = pd.DataFrame(np.sum(inputs, axis=1))
 
 cycles = np.pi
-theta = np.pi/5
+theta = np.pi / 5
 
-y1 = np.power(np.sin(cycles*sums + theta), 2)
-y2 = np.power(np.sin(cycles*sums + 2*theta), 2)
-y3 = np.power(np.sin(cycles*sums + 3*theta), 2)
-y4 = np.power(np.sin(cycles*sums + 4*theta), 2)
-y5 = np.power(np.sin(cycles*sums + 5*theta), 2)
+y1 = np.power(np.sin(cycles * sums + theta), 2)
+y2 = np.power(np.sin(cycles * sums + 2 * theta), 2)
+y3 = np.power(np.sin(cycles * sums + 3 * theta), 2)
+y4 = np.power(np.sin(cycles * sums + 4 * theta), 2)
+y5 = np.power(np.sin(cycles * sums + 5 * theta), 2)
 y = np.hstack([y1, y2, y3, y4, y5])
-targetnames = ['y1', 'y2', 'y3', 'y4', 'y5']
+targetnames = ["y1", "y2", "y3", "y4", "y5"]
 outputs = pd.DataFrame(y, columns=targetnames)
 targets = outputs.idxmax(axis=1)
-x_train, x_test, target_train, target_test, output_train, output_test = \
-    train_test_split(inputs, targets, outputs)
-x_t1, x_t2, t_t1, t_t2, o_t1, o_t2 = train_test_split(x_train, target_train, output_train)
+x_train, x_test, target_train, target_test, output_train, output_test = train_test_split(
+    inputs, targets, outputs
+)
+x_t1, x_t2, t_t1, t_t2, o_t1, o_t2 = train_test_split(
+    x_train, target_train, output_train
+)
 classifier = multi_class_classification(x_t1, o_t1)
 predictions = classifier.predict(x_test, targetnames)
 con_mat = confusion_matrix(target_test, predictions)
@@ -39,11 +42,11 @@ lenp = len(predictions)
 cost_mat = output_test
 cost_mat = -cost_mat.sub(cost_mat.max(axis=1), axis=0)
 cost = classifier.cost_loss(x_test, cost_mat)
-print(lent == lenp, 'Cost based classification', cost/lenp)
+print(lent == lenp, "Cost based classification", cost / lenp)
 classifier.optmize_weights(x_t2, o_t2)
 w = classifier.weights
 cost = classifier.weightedcost(w, x_test, cost_mat)
-print(lent == lenp, 'Weighted Votes Cost based classification', cost)
+print(lent == lenp, "Weighted Votes Cost based classification", cost)
 ################################################
 num_classes = len(targetnames)
 
@@ -58,7 +61,7 @@ num_samples, num_classes = cost_mat.shape
 cost = 0
 for index in range(num_samples):
     cost += cost_mat.iloc[index][predictions[index]]
-print('Cost independent classification', cost/lenp)
+print("Cost independent classification", cost / lenp)
 """
 classes = targetnames
 cost_mat = output_train
